@@ -5,7 +5,7 @@ namespace MyHolidays.Core.Models
 {
     public class Trip : Entity
     {
-        public List<ItemId> Items = new List<ItemId>();
+        public List<Item> Items = new List<Item>();
         public TripId Id { get; private set; }
         public string Label { get; set; }
 
@@ -15,9 +15,19 @@ namespace MyHolidays.Core.Models
             Label = label;
         }
 
-        public void SelectItem(ItemId item)
+        public void SelectItem(Item item)
         {
-            Items.Add(item);
+            Apply(new NewItemSelected(this.Id.Id, new ItemDto(item.Id.Id, item.Label)));
+        }
+
+        protected override void When(IDomainEvent ev)
+        {
+            switch (ev)
+            {
+                case NewItemSelected e:
+                    Items.Add(Item.FromEvent(e.Item));
+                    break;
+            }
         }
     }
 }

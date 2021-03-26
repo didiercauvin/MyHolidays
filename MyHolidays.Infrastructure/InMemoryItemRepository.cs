@@ -17,7 +17,7 @@ namespace MyHolidays.Infrastructure
 
         public Item Get(int itemId)
         {
-            throw new NotImplementedException();
+            return _items.Where(x => x.Id.Id == itemId).FirstOrDefault();
         }
 
         public List<Item> GetAll()

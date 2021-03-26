@@ -10,17 +10,22 @@ namespace MyHolidays.Core.TripUseCases.SelectItem
         public class Handler : ICommandHandler<SelectItemToTripCommand>
         {
             private readonly ITripRepository _tripRepository;
+            private readonly IItemRepository _itemRepository;
 
-            public Handler(ITripRepository tripRepository)
+            public Handler(
+                IItemRepository itemRepository,
+                ITripRepository tripRepository)
             {
                 _tripRepository = tripRepository;
+                _itemRepository = itemRepository;
             }
 
             public void Handle(SelectItemToTripCommand command)
             {
                 Trip trip = _tripRepository.Get(command.TripId);
+                Item item = _itemRepository.Get(command.ItemId);
 
-                trip.SelectItem(new ItemId(command.ItemId));
+                trip.SelectItem(item);
             }
         }
 

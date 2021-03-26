@@ -23,7 +23,7 @@ namespace MyHolidays.Tests
         {
             if (typeof(TCommand) == typeof(SelectItemToTripCommand))
             {
-                return (ICommandHandler<TCommand>)new SelectItemToTripCommand.Handler(_tripRepository);
+                return (ICommandHandler<TCommand>)new SelectItemToTripCommand.Handler(_itemRepository, _tripRepository);
             }
 
             if (typeof(TCommand) == typeof(AddItemCommand))
@@ -32,6 +32,11 @@ namespace MyHolidays.Tests
             }
 
             return (ICommandHandler<TCommand>)new PrepareTripCommand.Handler(_tripRepository);
+        }
+
+        internal void Add(Item item)
+        {
+            _itemRepository.Add(item);
         }
 
         public void Add(Trip trip)

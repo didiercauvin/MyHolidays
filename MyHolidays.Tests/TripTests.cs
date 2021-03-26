@@ -34,6 +34,7 @@ namespace MyHolidays.Tests
             var command = new SelectItemToTripCommand { ItemId = 1, TripId = 1 };
 
             _fixtures.Add(new Trip(1, "some"));
+            _fixtures.Add(new Item(1, "item"));
 
             var handler = _fixtures.GetHandler<SelectItemToTripCommand>();
 
@@ -41,7 +42,7 @@ namespace MyHolidays.Tests
 
             var trip = _fixtures.GetTripWhere(x => x.Id.Id == 1);
 
-            Assert.Equal(1, trip.Items.First().Id);
+            Assert.Equal(1, trip.Items.First().Id.Id);
         }
 
     }

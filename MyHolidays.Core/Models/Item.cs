@@ -1,4 +1,6 @@
-﻿namespace MyHolidays.Core.Models
+﻿using System;
+
+namespace MyHolidays.Core.Models
 {
     public class Item : Entity
     {
@@ -10,6 +12,16 @@
         {
             Id = new ItemId(id);
             Label = label;
+        }
+
+        protected override void When(IDomainEvent e)
+        {
+            
+        }
+
+        public static Item FromEvent(ItemDto item)
+        {
+            return new Item(item.Id, item.Label);
         }
     }
 }
