@@ -17,7 +17,7 @@ namespace MyHolidays.Core.ItemUseCases
 
             public void Handle(AddItemCommand command)
             {
-                int id = _itemRepository.NextIdentity();
+                var id = _itemRepository.NextIdentity();
                 var item = new Item(id, command.Label);
 
                 _itemRepository.Add(item);

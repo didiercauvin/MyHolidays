@@ -1,10 +1,12 @@
-﻿namespace MyHolidays.Core.Models
+﻿using System;
+
+namespace MyHolidays.Core.Models
 {
     public class TripId : ValueObject<TripId>
     {
-        public int Id { get; private set; }
+        public Guid Id { get; private set; }
 
-        public TripId(int tripId)
+        public TripId(Guid tripId)
         {
             Id = tripId;
         }

@@ -9,15 +9,26 @@ namespace MyHolidays.Core.Models
         public TripId Id { get; private set; }
         public string Label { get; set; }
 
-        public Trip(int tripId, string label)
+        private Trip(Guid tripId, string label)
         {
             Id = new TripId(tripId);
             Label = label;
+            Apply(new NewTripCreated(tripId, label));
+        }
+
+        private Trip(List<IDomainEvent> tripEvents)
+        {
+            foreach (var ev in tripEvents)
+            {
+                When(ev);
+            };
         }
 
         public void SelectItem(Item item)
         {
-            Apply(new NewItemSelected(this.Id.Id, new ItemDto(item.Id.Id, item.Label)));
+            var dto = new ItemDto(item.Id.Id, item.Label);
+            NewItemSelected ev = new NewItemSelected(this.Id.Id, dto);
+            Apply(ev);
         }
 
         protected override void When(IDomainEvent ev)
@@ -27,7 +38,21 @@ namespace MyHolidays.Core.Models
                 case NewItemSelected e:
                     Items.Add(Item.FromEvent(e.Item));
                     break;
+                case NewTripCreated e:
+                    this.Id = new TripId(e.TripId);
+                    this.Label = e.Label;
+                    break;
             }
+        }
+
+        public static Trip CreateFrom(List<IDomainEvent> tripEvents)
+        {
+            return new Trip(tripEvents);
+        }
+
+        public static Trip CreateFor(Guid tripId, string label)
+        {
+            return new Trip(tripId, label);
         }
     }
 }

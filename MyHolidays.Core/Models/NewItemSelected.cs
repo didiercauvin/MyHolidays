@@ -1,11 +1,13 @@
-﻿namespace MyHolidays.Core.Models
+﻿using System;
+
+namespace MyHolidays.Core.Models
 {
     public class NewItemSelected : IDomainEvent
     {
-        public int TripId { get; set; }
+        public Guid TripId { get; set; }
         public ItemDto Item { get; set; }
 
-        public NewItemSelected(int id, ItemDto item)
+        public NewItemSelected(Guid id, ItemDto item)
         {
             this.TripId = id;
             this.Item = item;

@@ -1,5 +1,6 @@
 ﻿using MyHolidays.Core;
 using MyHolidays.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,8 +9,14 @@ namespace MyHolidays.Infrastructure
     public class InMemoryTripRepository : ITripRepository
     {
         private List<Trip> _trips = new List<Trip>();
+        private readonly IEventStore _eventStore;
 
-        public Trip Get(int tripId)
+        public InMemoryTripRepository(IEventStore eventStore)
+        {
+            _eventStore = eventStore;
+        }
+
+        public Trip Get(Guid tripId)
         {
             return _trips
                 .Where(x => x.Id.Id == tripId)
@@ -26,9 +33,9 @@ namespace MyHolidays.Infrastructure
             return _trips;
         }
 
-        public int GetNextIdentity()
+        public Guid GetNextIdentity()
         {
-            return _trips.Select(x => x.Id.Id).FirstOrDefault() + 1;
+            return Guid.NewGuid();
         }
     }
 }

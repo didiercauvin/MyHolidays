@@ -1,11 +1,13 @@
-﻿namespace MyHolidays.Core
+﻿using System;
+
+namespace MyHolidays.Core
 {
 
     public class ItemId : ValueObject<ItemId>
     {
-        public int Id { get; private set; }
+        public Guid Id { get; private set; }
 
-        public ItemId(int itemId)
+        public ItemId(Guid itemId)
         {
             this.Id = itemId;
         }

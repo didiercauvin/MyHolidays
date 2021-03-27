@@ -8,14 +8,20 @@ namespace MyHolidays.Infrastructure
 {
     public class InMemoryItemRepository : IItemRepository
     {
+        private IEventStore _eventStore;
         private List<Item> _items = new List<Item>();
+
+        public InMemoryItemRepository(IEventStore eventStore)
+        {
+            _eventStore = eventStore;
+        }
 
         public void Add(Item item)
         {
             _items.Add(item);
         }
 
-        public Item Get(int itemId)
+        public Item Get(Guid itemId)
         {
             return _items.Where(x => x.Id.Id == itemId).FirstOrDefault();
         }
@@ -25,9 +31,9 @@ namespace MyHolidays.Infrastructure
             return _items;
         }
 
-        public int NextIdentity()
+        public Guid NextIdentity()
         {
-            return _items.Select(x => x.Id.Id).FirstOrDefault() + 1;
+            return Guid.NewGuid();
         }
     }
 }

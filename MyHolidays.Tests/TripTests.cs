@@ -1,6 +1,7 @@
 using MyHolidays.Core.Models;
 using MyHolidays.Core.TripUseCases.PrepareTrip;
 using MyHolidays.Core.TripUseCases.SelectItem;
+using System;
 using System.Linq;
 using Xunit;
 
@@ -19,30 +20,34 @@ namespace MyHolidays.Tests
         [Fact]
         public void PrepareTrip()
         {
-            var command = new PrepareTripCommand { Label = "some" };
-            var handler = _fixtures.GetHandler<PrepareTripCommand>();
+            Guid guid = Guid.NewGuid();
 
-            handler.Handle(command);
+            var command = new PrepareTripCommand { Id = guid, Label = "some" };
 
-            var preparedTrip = _fixtures.GetTripWhere(x => x.Label == "some");
-            Assert.NotNull(preparedTrip);
+            _fixtures.Execute(command);
+
+            var preparedTrip = Trip.CreateFrom(_fixtures.GetAllEventsFor(guid));
+            Assert.Equal(guid, preparedTrip.Id.Id);
+            Assert.Equal("some", preparedTrip.Label);
         }
 
         [Fact]
         public void SelectItem()
         {
-            var command = new SelectItemToTripCommand { ItemId = 1, TripId = 1 };
+            var itemId = Guid.NewGuid();
+            var tripId = Guid.NewGuid();
 
-            _fixtures.Add(new Trip(1, "some"));
-            _fixtures.Add(new Item(1, "item"));
+            _fixtures.Execute(new PrepareTripCommand { Id = tripId, Label = "some" });
 
-            var handler = _fixtures.GetHandler<SelectItemToTripCommand>();
+            _fixtures.Add(new Item(itemId, "item"));
 
-            handler.Handle(command);
+            var command = new SelectItemToTripCommand { ItemId = itemId, TripId = tripId };
 
-            var trip = _fixtures.GetTripWhere(x => x.Id.Id == 1);
+            _fixtures.Execute(command);
 
-            Assert.Equal(1, trip.Items.First().Id.Id);
+            var trip = Trip.CreateFrom(_fixtures.GetAllEventsFor(tripId));
+
+            Assert.Equal(itemId, trip.Items[0].Id.Id);
         }
 
     }

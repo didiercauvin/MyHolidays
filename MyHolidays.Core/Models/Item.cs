@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MyHolidays.Core.Models
 {
@@ -8,7 +9,7 @@ namespace MyHolidays.Core.Models
 
         public ItemId Id { get; set; }
 
-        public Item(int id, string label)
+        public Item(Guid id, string label)
         {
             Id = new ItemId(id);
             Label = label;
@@ -22,6 +23,11 @@ namespace MyHolidays.Core.Models
         public static Item FromEvent(ItemDto item)
         {
             return new Item(item.Id, item.Label);
+        }
+
+        internal static Item CreateFrom(List<IDomainEvent> itemEvents)
+        {
+            throw new NotImplementedException();
         }
     }
 }

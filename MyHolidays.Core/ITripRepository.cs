@@ -6,8 +6,8 @@ namespace MyHolidays.Core
 {
     public interface ITripRepository
     {
-        Trip Get(int tripId);
-        int GetNextIdentity();
+        Trip Get(Guid tripId);
+        Guid GetNextIdentity();
         void Add(Trip trip);
         List<Trip> GetAll();
     }
