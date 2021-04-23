@@ -10,6 +10,8 @@ namespace MyHolidays.Infrastructure
 {
     public class InMemoryEventStore : IEventStore
     {
+        public List<IDomainEvent> Events { get; } = new List<IDomainEvent>();
+
         private List<EventInStore> _eventsToPublish = new List<EventInStore>();
 
         public List<IDomainEvent> GetAllEvents(Guid id)
@@ -20,6 +22,12 @@ namespace MyHolidays.Infrastructure
         }
 
         public void Save(Guid id, IEnumerable<IDomainEvent> domainEvents)
+        {
+            Events.AddRange(domainEvents);
+            _eventsToPublish.Add(new EventInStore(id, domainEvents));
+        }
+
+        public void AddEvents(Guid id, IEnumerable<IDomainEvent> domainEvents)
         {
             _eventsToPublish.Add(new EventInStore(id, domainEvents));
         }

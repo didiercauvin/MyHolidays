@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace MyHolidays.Core.Models
 {
-    public class Trip : Entity
+    public class Trip : AggregateRoot
     {
-        public List<Item> Items = new List<Item>();
-        public TripId Id { get; private set; }
-        public string Label { get; set; }
+        private List<Guid> Items = new List<Guid>();
+        public override Guid Id { get; set; }
+        private string Label { get; set; }
 
         private Trip(Guid tripId, string label)
         {
-            Id = new TripId(tripId);
+            Id = tripId;
             Label = label;
             Apply(new NewTripCreated(tripId, label));
         }
@@ -21,14 +21,13 @@ namespace MyHolidays.Core.Models
             foreach (var ev in tripEvents)
             {
                 When(ev);
-            };
+            }
         }
 
-        public void SelectItem(Item item)
+
+        public void SelectItem(Guid itemId)
         {
-            var dto = new ItemDto(item.Id.Id, item.Label);
-            NewItemSelected ev = new NewItemSelected(this.Id.Id, dto);
-            Apply(ev);
+            Apply(new NewItemSelected(this.Id, itemId));
         }
 
         protected override void When(IDomainEvent ev)
@@ -36,10 +35,10 @@ namespace MyHolidays.Core.Models
             switch (ev)
             {
                 case NewItemSelected e:
-                    Items.Add(Item.FromEvent(e.Item));
+                    Items.Add(e.ItemId);
                     break;
                 case NewTripCreated e:
-                    this.Id = new TripId(e.TripId);
+                    this.Id = e.TripId;
                     this.Label = e.Label;
                     break;
             }

@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 
 namespace MyHolidays.Core.Models
 {
-    public interface IEntity
+    public abstract class AggregateRoot
     {
+        public abstract Guid Id { get; set; }
 
-    }
-
-    public abstract class Entity : IEntity
-    {
         protected List<IDomainEvent> Events { get; set; } = new List<IDomainEvent>();
 
         protected void Apply(IDomainEvent e)

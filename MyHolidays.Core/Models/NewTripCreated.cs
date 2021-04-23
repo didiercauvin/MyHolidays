@@ -2,7 +2,7 @@
 
 namespace MyHolidays.Core.Models
 {
-    internal class NewTripCreated : IDomainEvent
+    public class NewTripCreated : IDomainEvent
     {
         public NewTripCreated(Guid tripId, string label)
         {

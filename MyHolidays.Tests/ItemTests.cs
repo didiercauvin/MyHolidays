@@ -1,4 +1,5 @@
 ﻿using MyHolidays.Core.ItemUseCases;
+using MyHolidays.Core.Models;
 using Xunit;
 
 namespace MyHolidays.Tests
@@ -17,13 +18,10 @@ namespace MyHolidays.Tests
         public void AddItem()
         {
             var command = new AddItemCommand() { Label = "item" };
-            var handler = _fixtures.GetHandler<AddItemCommand>();
 
-            handler.Handle(command);
+            _fixtures.Execute(command);
 
-            var item = _fixtures.GetItemWhere(x => x.Label == "item");
-
-            Assert.NotNull(item);
+            _fixtures.ContainsOnly<NewItemCreated>(x => x.Label == "item");
         }
     }
 }

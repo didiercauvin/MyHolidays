@@ -5,12 +5,12 @@ namespace MyHolidays.Core.Models
     public class NewItemSelected : IDomainEvent
     {
         public Guid TripId { get; set; }
-        public ItemDto Item { get; set; }
+        public Guid ItemId { get; set; }
 
-        public NewItemSelected(Guid id, ItemDto item)
+        public NewItemSelected(Guid id, Guid itemId)
         {
             this.TripId = id;
-            this.Item = item;
+            this.ItemId = itemId;
         }
     }
 }

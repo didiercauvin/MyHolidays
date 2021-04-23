@@ -23,7 +23,7 @@ namespace MyHolidays.Infrastructure
 
         public Item Get(Guid itemId)
         {
-            return _items.Where(x => x.Id.Id == itemId).FirstOrDefault();
+            return _items.Where(x => x.ItemId.Id == itemId).FirstOrDefault();
         }
 
         public List<Item> GetAll()

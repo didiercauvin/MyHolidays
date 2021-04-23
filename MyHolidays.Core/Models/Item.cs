@@ -3,21 +3,40 @@ using System.Collections.Generic;
 
 namespace MyHolidays.Core.Models
 {
-    public class Item : Entity
+    public class Item : AggregateRoot
     {
-        public string Label { get; set; }
+        private string Label { get; set; }
 
-        public ItemId Id { get; set; }
+        public ItemId ItemId { get; set; }
+
+        public override Guid Id { get; set; }
 
         public Item(Guid id, string label)
         {
-            Id = new ItemId(id);
+            Id = id;
+            ItemId = new ItemId(id);
             Label = label;
+
+            Apply(new NewItemCreated(id, label));
         }
 
-        protected override void When(IDomainEvent e)
+        public Item(List<IDomainEvent> events)
         {
-            
+            foreach (var ev in events)
+            {
+                When(ev);
+            }
+        }
+
+        protected override void When(IDomainEvent ev)
+        {
+            switch (ev)
+            {
+                case NewItemCreated e:
+                    this.Id = e.Id;
+                    this.Label = e.Label;
+                    break;
+            }
         }
 
         public static Item FromEvent(ItemDto item)
@@ -25,9 +44,9 @@ namespace MyHolidays.Core.Models
             return new Item(item.Id, item.Label);
         }
 
-        internal static Item CreateFrom(List<IDomainEvent> itemEvents)
+        public static Item CreateFrom(List<IDomainEvent> events)
         {
-            throw new NotImplementedException();
+            return new Item(events);
         }
     }
 }

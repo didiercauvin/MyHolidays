@@ -16,15 +16,25 @@ namespace MyHolidays.Tests
 
     public class Fixtures
     {
-        private IEventStore _eventStore;
-        private ITripRepository _tripRepository;
-        private IItemRepository _itemRepository;
+        private InMemoryEventStore _eventStore;
+        private IRepository<Trip> _tripRepository;
+        private IRepository<Item> _itemRepository;
 
         public Fixtures()
         {
             _eventStore = new InMemoryEventStore();
-            _tripRepository = new InMemoryTripRepository(_eventStore);
-            _itemRepository = new InMemoryItemRepository(_eventStore);
+            _tripRepository = new Repository<Trip>(_eventStore, new AggregateFactory());
+            _itemRepository = new Repository<Item>(_eventStore, new AggregateFactory());
+        }
+
+        public bool ContainsOnly<T>(Func<T, bool> predicate)
+        {
+            return _eventStore.Events.Cast<T>().Where(predicate).Count() == 1;
+        }
+
+        public void Given(Guid tripId, IDomainEvent domainEvent)
+        {
+            _eventStore.AddEvents(tripId, new[] { domainEvent });
         }
 
         public ICommandHandler<TCommand> GetHandler<TCommand>()
@@ -32,7 +42,7 @@ namespace MyHolidays.Tests
         {
             if (typeof(TCommand) == typeof(SelectItemToTripCommand))
             {
-                return (ICommandHandler<TCommand>)new SelectItemToTripCommand.Handler(_itemRepository, _eventStore);
+                return (ICommandHandler<TCommand>)new SelectItemToTripCommand.Handler(_itemRepository, _tripRepository);
             }
 
             if (typeof(TCommand) == typeof(AddItemCommand))
@@ -40,33 +50,14 @@ namespace MyHolidays.Tests
                 return (ICommandHandler<TCommand>)new AddItemCommand.Handler(_itemRepository);
             }
 
-            return (ICommandHandler<TCommand>)new PrepareTripCommand.Handler(_tripRepository, _eventStore);
+            return (ICommandHandler<TCommand>)new PrepareTripCommand.Handler(_tripRepository);
         }
 
         public void Execute<TCommand>(TCommand command)
             where TCommand : ICommand
         {
+            _eventStore.Events.Clear();
             GetHandler<TCommand>().Handle(command);
-        }
-
-        internal void Add(Item item)
-        {
-            _itemRepository.Add(item);
-        }
-
-        public void Add(Trip trip)
-        {
-            _tripRepository.Add(trip);
-        }
-
-        public List<IDomainEvent> GetAllEventsFor(Guid id)
-        {
-             return _eventStore.GetAllEvents(id);
-        }
-
-        public Item GetItemWhere(Func<Item, bool> request)
-        {
-            return _itemRepository.GetAll().Where(request).FirstOrDefault();
         }
     }
 }

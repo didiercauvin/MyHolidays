@@ -26,9 +26,7 @@ namespace MyHolidays.Tests
 
             _fixtures.Execute(command);
 
-            var preparedTrip = Trip.CreateFrom(_fixtures.GetAllEventsFor(guid));
-            Assert.Equal(guid, preparedTrip.Id.Id);
-            Assert.Equal("some", preparedTrip.Label);
+            Assert.True(_fixtures.ContainsOnly<NewTripCreated>(x => x.TripId == guid && x.Label == "some"));
         }
 
         [Fact]
@@ -37,17 +35,14 @@ namespace MyHolidays.Tests
             var itemId = Guid.NewGuid();
             var tripId = Guid.NewGuid();
 
-            _fixtures.Execute(new PrepareTripCommand { Id = tripId, Label = "some" });
-
-            _fixtures.Add(new Item(itemId, "item"));
+            _fixtures.Given(tripId, new NewTripCreated(tripId, "trip"));
+            _fixtures.Given(itemId, new NewItemCreated(itemId, "item"));
 
             var command = new SelectItemToTripCommand { ItemId = itemId, TripId = tripId };
 
             _fixtures.Execute(command);
 
-            var trip = Trip.CreateFrom(_fixtures.GetAllEventsFor(tripId));
-
-            Assert.Equal(itemId, trip.Items[0].Id.Id);
+            Assert.True(_fixtures.ContainsOnly<NewItemSelected>(x => x.ItemId == itemId));
         }
 
     }
