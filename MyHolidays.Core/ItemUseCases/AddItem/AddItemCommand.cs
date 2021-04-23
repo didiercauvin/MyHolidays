@@ -1,10 +1,12 @@
 ﻿using MyHolidays.Core.Models;
+using System;
 
 namespace MyHolidays.Core.ItemUseCases
 {
     public class AddItemCommand : ICommand
     {
         public string Label { get; set; }
+        public Guid Id { get; set; }
 
         public class Handler : ICommandHandler<AddItemCommand>
         {
@@ -17,8 +19,7 @@ namespace MyHolidays.Core.ItemUseCases
 
             public void Handle(AddItemCommand command)
             {
-                var id = _itemRepository.GetNextIdentity();
-                var item = new Item(id, command.Label);
+                var item = new Item(command.Id, command.Label);
 
                 _itemRepository.Save(item);
             }

@@ -27,10 +27,5 @@ namespace MyHolidays.Infrastructure
         {
             _eventStore.Save(aggregate.Id, aggregate.GetChanges());
         }
-
-        public Guid GetNextIdentity()
-        {
-            return Guid.NewGuid();
-        }
     }
 }

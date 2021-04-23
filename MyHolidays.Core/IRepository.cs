@@ -12,6 +12,5 @@ namespace MyHolidays.Core
     {
         T GetBy(Guid id);
         void Save(T aggregate);
-        Guid GetNextIdentity();
     }
 }

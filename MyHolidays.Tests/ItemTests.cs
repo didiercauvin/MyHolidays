@@ -1,5 +1,6 @@
 ﻿using MyHolidays.Core.ItemUseCases;
 using MyHolidays.Core.Models;
+using System;
 using Xunit;
 
 namespace MyHolidays.Tests
@@ -17,7 +18,8 @@ namespace MyHolidays.Tests
         [Fact]
         public void AddItem()
         {
-            var command = new AddItemCommand() { Label = "item" };
+            Guid guid = Guid.NewGuid();
+            var command = new AddItemCommand() { Id = guid, Label = "item" };
 
             _fixtures.Execute(command);
 
