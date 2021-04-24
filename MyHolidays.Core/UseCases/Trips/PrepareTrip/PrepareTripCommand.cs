@@ -1,12 +1,12 @@
 ﻿using MyHolidays.Core.Models;
 using System;
 
-namespace MyHolidays.Core.TripUseCases.PrepareTrip
+namespace MyHolidays.Core.UseCases.Trips.PrepareTrip
 {
     public class PrepareTripCommand : ICommand
     {
         public string Label { get; set; }
-        public System.Guid Id { get; set; }
+        public Guid Id { get; set; }
 
         public class Handler : ICommandHandler<PrepareTripCommand>
         {

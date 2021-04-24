@@ -1,7 +1,7 @@
 ﻿using MyHolidays.Core.Models;
 using System;
 
-namespace MyHolidays.Core.TripUseCases.SelectItem
+namespace MyHolidays.Core.UseCases.Trips.SelectItem
 {
     public class SelectItemToTripCommand : ICommand
     {
@@ -16,7 +16,7 @@ namespace MyHolidays.Core.TripUseCases.SelectItem
 
             public Handler(IRepository<Item> itemRepository, IRepository<Trip> tripRepository)
             {
-                this._itemRepository = itemRepository;
+                _itemRepository = itemRepository;
                 _tripRepository = tripRepository;
             }
 

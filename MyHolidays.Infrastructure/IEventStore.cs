@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MyHolidays.Core
+namespace MyHolidays.Infrastructure
 {
     public interface IEventStore
     {

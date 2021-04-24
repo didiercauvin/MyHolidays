@@ -1,8 +1,8 @@
 ﻿using MyHolidays.Core;
-using MyHolidays.Core.ItemUseCases;
 using MyHolidays.Core.Models;
-using MyHolidays.Core.TripUseCases.PrepareTrip;
-using MyHolidays.Core.TripUseCases.SelectItem;
+using MyHolidays.Core.UseCases.Items.AddItem;
+using MyHolidays.Core.UseCases.Trips.PrepareTrip;
+using MyHolidays.Core.UseCases.Trips.SelectItem;
 using MyHolidays.Infrastructure;
 using System;
 using System.Collections.Generic;

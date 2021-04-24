@@ -1,6 +1,6 @@
 using MyHolidays.Core.Models;
-using MyHolidays.Core.TripUseCases.PrepareTrip;
-using MyHolidays.Core.TripUseCases.SelectItem;
+using MyHolidays.Core.UseCases.Trips.PrepareTrip;
+using MyHolidays.Core.UseCases.Trips.SelectItem;
 using System;
 using System.Linq;
 using Xunit;

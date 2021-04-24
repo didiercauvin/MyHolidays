@@ -1,5 +1,5 @@
-﻿using MyHolidays.Core.ItemUseCases;
-using MyHolidays.Core.Models;
+﻿using MyHolidays.Core.Models;
+using MyHolidays.Core.UseCases.Items.AddItem;
 using System;
 using Xunit;
 

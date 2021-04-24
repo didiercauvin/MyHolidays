@@ -1,7 +1,7 @@
 ﻿using MyHolidays.Core.Models;
 using System;
 
-namespace MyHolidays.Core.ItemUseCases
+namespace MyHolidays.Core.UseCases.Items.AddItem
 {
     public class AddItemCommand : ICommand
     {
