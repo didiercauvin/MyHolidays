@@ -6,12 +6,17 @@ namespace MyHolidays.Core.Models
     public class Trip : EventStream
     {
         private List<Guid> Items = new List<Guid>();
-        private string Label { get; set; }
+        private string _label;
+
+        public Trip()
+        {
+
+        }
 
         private Trip(Guid tripId, string label)
         {
             Id = tripId;
-            Label = label;
+            _label = label;
             Apply(new NewTripCreated(tripId, label));
         }
 
@@ -38,7 +43,7 @@ namespace MyHolidays.Core.Models
                     break;
                 case NewTripCreated e:
                     this.Id = e.TripId;
-                    this.Label = e.Label;
+                    this._label = e.Label;
                     break;
             }
         }

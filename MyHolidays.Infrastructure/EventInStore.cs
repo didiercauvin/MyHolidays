@@ -7,12 +7,12 @@ namespace MyHolidays.Infrastructure
 {
     public class EventInStore
     {
-        public Guid Id { get; set; }
-        public List<IDomainEvent> Events = new List<IDomainEvent>();
+        public string Id { get; }
+        public List<IDomainEvent> Events { get; } = new List<IDomainEvent>();
 
-        public EventInStore(Guid id, IEnumerable<IDomainEvent> events)
+        public EventInStore(StreamIdentifier id, IEnumerable<IDomainEvent> events)
         {
-            this.Id = id;
+            this.Id = id.Value;
             Events = events.ToList();
         }
     }

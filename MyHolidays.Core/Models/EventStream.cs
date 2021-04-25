@@ -8,7 +8,9 @@ namespace MyHolidays.Core.Models
 {
     public abstract class EventStream
     {
-        public Guid Id { get; set; }
+        public StreamIdentifier StreamIdentifier => new StreamIdentifier(this.GetType().Name, Id);
+
+        protected Guid Id { get; set; }
 
         protected List<IDomainEvent> Events { get; set; } = new List<IDomainEvent>();
 

@@ -13,10 +13,10 @@ namespace MyHolidays.Infrastructure
 
         private List<EventInStore> _eventsToPublish = new List<EventInStore>();
 
-        public List<IDomainEvent> GetAllEvents(Guid id)
+        public List<IDomainEvent> GetAllEvents(StreamIdentifier id)
         {
             return _eventsToPublish
-                .Where(x => x.Id == id)
+                .Where(x => x.Id == id.Value)
                 .SelectMany(x => x.Events).ToList();
         }
 

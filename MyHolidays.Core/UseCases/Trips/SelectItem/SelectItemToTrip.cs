@@ -21,9 +21,8 @@ namespace MyHolidays.Core.UseCases.Trips.SelectItem
             public void Handle(SelectItemToTripCommand command)
             {
                 Trip trip = _repository.GetBy<Trip>(command.TripId);
-                Item item = _repository.GetBy<Item>(command.ItemId);
 
-                trip.SelectItem(item.Id);
+                trip.SelectItem(command.ItemId);
 
                 _repository.Save(trip);
             }

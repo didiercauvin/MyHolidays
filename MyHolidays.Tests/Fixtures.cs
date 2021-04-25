@@ -33,7 +33,8 @@ namespace MyHolidays.Tests
         public void Given<TAggregate>(Guid id, IDomainEvent domainEvent)
             where TAggregate: EventStream
         {
-            _eventStore.AddEvents(new[] { new EventInStore(id, new[] { domainEvent }) });
+            var identifier = new StreamIdentifier(typeof(TAggregate).Name, id);
+            _eventStore.AddEvents(new[] { new EventInStore(identifier, new[] { domainEvent }) });
         }
 
         public ICommandHandler<TCommand> GetHandler<TCommand>()

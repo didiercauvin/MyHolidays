@@ -7,6 +7,6 @@ namespace MyHolidays.Infrastructure
     public interface IEventStore
     {
         void Save(IEnumerable<EventInStore> events);
-        List<IDomainEvent> GetAllEvents(Guid id);
+        List<IDomainEvent> GetAllEvents(StreamIdentifier id);
     }
 }
