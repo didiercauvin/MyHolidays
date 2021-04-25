@@ -11,23 +11,21 @@ namespace MyHolidays.Core.UseCases.Trips.SelectItem
 
         public class Handler : ICommandHandler<SelectItemToTripCommand>
         {
-            private readonly IRepository<Item> _itemRepository;
-            private readonly IRepository<Trip> _tripRepository;
+            private readonly IRepository _repository;
 
-            public Handler(IRepository<Item> itemRepository, IRepository<Trip> tripRepository)
+            public Handler(IRepository itemRepository)
             {
-                _itemRepository = itemRepository;
-                _tripRepository = tripRepository;
+                _repository = itemRepository;
             }
 
             public void Handle(SelectItemToTripCommand command)
             {
-                Trip trip = _tripRepository.GetBy(command.TripId);
-                Item item = _itemRepository.GetBy(command.ItemId);
+                Trip trip = _repository.GetBy<Trip>(command.TripId);
+                Item item = _repository.GetBy<Item>(command.ItemId);
 
                 trip.SelectItem(item.Id);
 
-                _tripRepository.Save(trip);
+                _repository.Save(trip);
             }
         }
 

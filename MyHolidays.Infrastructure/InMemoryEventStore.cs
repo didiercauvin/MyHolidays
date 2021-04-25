@@ -20,15 +20,15 @@ namespace MyHolidays.Infrastructure
                 .SelectMany(x => x.Events).ToList();
         }
 
-        public void Save(Guid id, IEnumerable<IDomainEvent> domainEvents)
+        public void Save(IEnumerable<EventInStore> events)
         {
-            Events.AddRange(domainEvents);
-            _eventsToPublish.Add(new EventInStore(id, domainEvents));
+            Events.AddRange(events.SelectMany(x => x.Events));
+            _eventsToPublish.AddRange(events);
         }
 
-        public void AddEvents(Guid id, IEnumerable<IDomainEvent> domainEvents)
+        public void AddEvents(IEnumerable<EventInStore> events)
         {
-            _eventsToPublish.Add(new EventInStore(id, domainEvents));
+            _eventsToPublish.AddRange(events);
         }
     }
 }

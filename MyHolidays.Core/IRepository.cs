@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace MyHolidays.Core
 {
-    public interface IRepository<T>
-        where T: AggregateRoot
+    public interface IRepository
     {
-        T GetBy(Guid id);
-        void Save(T aggregate);
+        T GetBy<T>(Guid id) where T : AggregateRoot;
+        void Save(AggregateRoot aggregate);
     }
 }

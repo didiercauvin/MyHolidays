@@ -17,14 +17,12 @@ namespace MyHolidays.Tests
     public class Fixtures
     {
         private InMemoryEventStore _eventStore;
-        private IRepository<Trip> _tripRepository;
-        private IRepository<Item> _itemRepository;
+        private Repository _repository;
 
         public Fixtures()
         {
             _eventStore = new InMemoryEventStore();
-            _tripRepository = new Repository<Trip>(_eventStore, new AggregateFactory());
-            _itemRepository = new Repository<Item>(_eventStore, new AggregateFactory());
+            _repository = new Repository(_eventStore, new AggregateFactory());
         }
 
         public bool ContainsOnly<T>(Func<T, bool> predicate)
@@ -32,9 +30,10 @@ namespace MyHolidays.Tests
             return _eventStore.Events.Cast<T>().Where(predicate).Count() == 1;
         }
 
-        public void Given(Guid tripId, IDomainEvent domainEvent)
+        public void Given<TAggregate>(Guid id, IDomainEvent domainEvent)
+            where TAggregate: AggregateRoot
         {
-            _eventStore.AddEvents(tripId, new[] { domainEvent });
+            _eventStore.AddEvents(new[] { new EventInStore(id, new[] { domainEvent }) });
         }
 
         public ICommandHandler<TCommand> GetHandler<TCommand>()
@@ -42,15 +41,15 @@ namespace MyHolidays.Tests
         {
             if (typeof(TCommand) == typeof(SelectItemToTripCommand))
             {
-                return (ICommandHandler<TCommand>)new SelectItemToTripCommand.Handler(_itemRepository, _tripRepository);
+                return (ICommandHandler<TCommand>)new SelectItemToTripCommand.Handler(_repository);
             }
 
             if (typeof(TCommand) == typeof(AddItemCommand))
             {
-                return (ICommandHandler<TCommand>)new AddItemCommand.Handler(_itemRepository);
+                return (ICommandHandler<TCommand>)new AddItemCommand.Handler(_repository);
             }
 
-            return (ICommandHandler<TCommand>)new PrepareTripCommand.Handler(_tripRepository);
+            return (ICommandHandler<TCommand>)new PrepareTripCommand.Handler(_repository);
         }
 
         public void Execute<TCommand>(TCommand command)

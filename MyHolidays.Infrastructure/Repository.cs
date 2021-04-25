@@ -6,8 +6,7 @@ using System.Linq;
 
 namespace MyHolidays.Infrastructure
 {
-    public class Repository<T> : IRepository<T>
-        where T: AggregateRoot
+    public class Repository : IRepository
     {
         private readonly IEventStore _eventStore;
         private readonly AggregateFactory _factory;
@@ -18,14 +17,14 @@ namespace MyHolidays.Infrastructure
             _factory = factory;
         }
 
-        public T GetBy(Guid id)
+        public T GetBy<T>(Guid id) where T : AggregateRoot
         {
             return _factory.Create<T>(_eventStore.GetAllEvents(id));
         }
 
-        public void Save(T aggregate)
+        public void Save(AggregateRoot aggregate)
         {
-            _eventStore.Save(aggregate.Id, aggregate.GetChanges());
+            _eventStore.Save(new[] { new EventInStore(aggregate.Id, aggregate.GetChanges()) });
         }
     }
 }
