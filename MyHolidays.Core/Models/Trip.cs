@@ -3,10 +3,9 @@ using System.Collections.Generic;
 
 namespace MyHolidays.Core.Models
 {
-    public class Trip : AggregateRoot
+    public class Trip : EventStream
     {
         private List<Guid> Items = new List<Guid>();
-        public override Guid Id { get; set; }
         private string Label { get; set; }
 
         private Trip(Guid tripId, string label)
@@ -49,7 +48,7 @@ namespace MyHolidays.Core.Models
             return new Trip(tripEvents);
         }
 
-        public static Trip CreateFor(Guid tripId, string label)
+        public static Trip Create(Guid tripId, string label)
         {
             return new Trip(tripId, label);
         }

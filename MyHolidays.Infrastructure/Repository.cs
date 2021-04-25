@@ -17,12 +17,12 @@ namespace MyHolidays.Infrastructure
             _factory = factory;
         }
 
-        public T GetBy<T>(Guid id) where T : AggregateRoot
+        public T GetBy<T>(Guid id) where T : EventStream
         {
             return _factory.Create<T>(_eventStore.GetAllEvents(id));
         }
 
-        public void Save(AggregateRoot aggregate)
+        public void Save(EventStream aggregate)
         {
             _eventStore.Save(new[] { new EventInStore(aggregate.Id, aggregate.GetChanges()) });
         }

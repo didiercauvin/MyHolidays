@@ -19,7 +19,7 @@ namespace MyHolidays.Core.UseCases.Items.AddItem
 
             public void Handle(AddItemCommand command)
             {
-                var item = new Item(command.Id, command.Label);
+                var item = Item.Create(command.Id, command.Label);
 
                 repository.Save(item);
             }

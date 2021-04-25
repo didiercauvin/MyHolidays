@@ -31,7 +31,7 @@ namespace MyHolidays.Tests
         }
 
         public void Given<TAggregate>(Guid id, IDomainEvent domainEvent)
-            where TAggregate: AggregateRoot
+            where TAggregate: EventStream
         {
             _eventStore.AddEvents(new[] { new EventInStore(id, new[] { domainEvent }) });
         }

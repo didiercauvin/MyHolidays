@@ -19,7 +19,7 @@ namespace MyHolidays.Core.UseCases.Trips.PrepareTrip
 
             public void Handle(PrepareTripCommand command)
             {
-                var trip = Trip.CreateFor(command.Id, command.Label);
+                var trip = Trip.Create(command.Id, command.Label);
 
                 _repository.Save(trip);
             }

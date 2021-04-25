@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace MyHolidays.Core.Models
 {
-    public abstract class AggregateRoot
+    public abstract class EventStream
     {
-        public abstract Guid Id { get; set; }
+        public Guid Id { get; set; }
 
         protected List<IDomainEvent> Events { get; set; } = new List<IDomainEvent>();
 

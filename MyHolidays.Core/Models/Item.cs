@@ -3,13 +3,11 @@ using System.Collections.Generic;
 
 namespace MyHolidays.Core.Models
 {
-    public class Item : AggregateRoot
+    public class Item : EventStream
     {
         private string Label { get; set; }
 
-        public override Guid Id { get; set; }
-
-        public Item(Guid id, string label)
+        private Item(Guid id, string label)
         {
             Id = id;
             Label = label;
@@ -34,6 +32,11 @@ namespace MyHolidays.Core.Models
                     this.Label = e.Label;
                     break;
             }
+        }
+
+        public static Item Create(Guid id, string label)
+        {
+            return new Item(id, label);
         }
 
         public static Item CreateFrom(List<IDomainEvent> events)

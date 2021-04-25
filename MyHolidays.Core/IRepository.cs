@@ -9,7 +9,7 @@ namespace MyHolidays.Core
 {
     public interface IRepository
     {
-        T GetBy<T>(Guid id) where T : AggregateRoot;
-        void Save(AggregateRoot aggregate);
+        T GetBy<T>(Guid id) where T : EventStream;
+        void Save(EventStream aggregate);
     }
 }
