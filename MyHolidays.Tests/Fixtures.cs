@@ -27,14 +27,17 @@ namespace MyHolidays.Tests
 
         public bool ContainsOnly<T>(Func<T, bool> predicate)
         {
-            return _eventStore.Events.Cast<T>().Where(predicate).Count() == 1;
+            return _eventStore.EventsToPublish
+                .SelectMany(x => x.Events)
+                .Where(x => x.GetType() == typeof(T)).Cast<T>()
+                .Where(predicate).Count() == 1;
         }
 
         public void Given<TAggregate>(Guid id, IDomainEvent domainEvent)
             where TAggregate: EventStream
         {
             var identifier = new StreamIdentifier(typeof(TAggregate).Name, id);
-            _eventStore.AddEvents(new[] { new EventInStore(identifier, new[] { domainEvent }) });
+            _eventStore.Save(new[] { new EventInStore(identifier, new[] { domainEvent }) });
         }
 
         public ICommandHandler<TCommand> GetHandler<TCommand>()
@@ -56,7 +59,6 @@ namespace MyHolidays.Tests
         public void Execute<TCommand>(TCommand command)
             where TCommand : ICommand
         {
-            _eventStore.Events.Clear();
             GetHandler<TCommand>().Handle(command);
         }
     }

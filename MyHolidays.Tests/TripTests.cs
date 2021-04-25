@@ -42,7 +42,7 @@ namespace MyHolidays.Tests
 
             _fixtures.Execute(command);
 
-            Assert.True(_fixtures.ContainsOnly<NewItemSelected>(x => x.ItemId == itemId));
+            Assert.True(_fixtures.ContainsOnly<NewItemSelected>(x => x.TripId == tripId && x.ItemId == itemId));
         }
 
     }

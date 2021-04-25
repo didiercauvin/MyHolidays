@@ -26,5 +26,10 @@ namespace MyHolidays.Core.Models
         }
 
         protected abstract void When(IDomainEvent e);
+
+        public void Commit()
+        {
+            Events.Clear();
+        }
     }
 }

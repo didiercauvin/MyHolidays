@@ -20,12 +20,15 @@ namespace MyHolidays.Infrastructure
         public T GetBy<T>(Guid id) where T : EventStream, new()
         {
             var identifier = new StreamIdentifier(typeof(T).Name, id);
+            
             return _factory.Create<T>(_eventStore.GetAllEvents(identifier));
         }
 
         public void Save(EventStream aggregate)
         {
             _eventStore.Save(new[] { new EventInStore(aggregate.StreamIdentifier, aggregate.GetChanges()) });
+
+            aggregate.Commit();
         }
     }
 }
