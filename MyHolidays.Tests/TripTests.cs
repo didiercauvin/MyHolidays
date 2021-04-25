@@ -36,7 +36,6 @@ namespace MyHolidays.Tests
             var tripId = Guid.NewGuid();
 
             _fixtures.Given<Trip>(tripId, new NewTripCreated(tripId, "trip"));
-            _fixtures.Given<Item>(itemId, new NewItemCreated(itemId, "item"));
 
             var command = new SelectItemToTripCommand { ItemId = itemId, TripId = tripId };
 

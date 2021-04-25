@@ -23,7 +23,7 @@ namespace MyHolidays.Tests
 
             _fixtures.Execute(command);
 
-            _fixtures.ContainsOnly<NewItemCreated>(x => x.Label == "item");
+            Assert.True(_fixtures.ContainsOnly<NewItemCreated>(x => x.Id == guid && x.Label == "item"));
         }
     }
 }
