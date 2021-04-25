@@ -6,26 +6,33 @@ using System.Linq;
 
 namespace MyHolidays.Infrastructure
 {
-    public class Repository<T> : IRepository<T>
-        where T: AggregateRoot
+    public class Repository : IRepository   
     {
-        private readonly IEventStore _eventStore;
-        private readonly AggregateFactory _factory;
+        public List<IDomainEvent> Events { get; } = new List<IDomainEvent>();
+        private List<AggregateRoot> _aggregates = new List<AggregateRoot>();
+        private readonly AggregateFactory _aggregateFactory;
 
-        public Repository(IEventStore eventStore, AggregateFactory factory)
+        public Repository(AggregateFactory aggregateFactory)
         {
-            _eventStore = eventStore;
-            _factory = factory;
+            _aggregateFactory = aggregateFactory;
         }
 
-        public T GetBy(Guid id)
+        public T GetBy<T>(Guid id) where T : AggregateRoot
         {
-            return _factory.Create<T>(_eventStore.GetAllEvents(id));
+            return _aggregates.First(x => x.Id == id) as T;
         }
 
-        public void Save(T aggregate)
+        public void Save(AggregateRoot aggregate)
         {
-            _eventStore.Save(aggregate.Id, aggregate.GetChanges());
+            Events.AddRange(aggregate.GetChanges());
+            _aggregates.Add(aggregate);
+        }
+
+        public void AddEvents<TAggregate>(IDomainEvent[] domainEvents)
+            where TAggregate : AggregateRoot
+        {
+            var aggregate = _aggregateFactory.Create<TAggregate>(domainEvents);
+            _aggregates.Add(aggregate);
         }
     }
 }

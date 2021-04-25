@@ -6,7 +6,7 @@ namespace MyHolidays.Infrastructure
 {
     public class AggregateFactory
     {
-        internal T Create<T>(List<IDomainEvent> domainEvents)
+        internal T Create<T>(IEnumerable<IDomainEvent> domainEvents)
             where T: AggregateRoot
         {
             if (typeof(T) == typeof(Trip))

@@ -6,7 +6,6 @@ namespace MyHolidays.Core.Models
     public class Trip : AggregateRoot
     {
         private List<Guid> Items = new List<Guid>();
-        public override Guid Id { get; set; }
         private string Label { get; set; }
 
         private Trip(Guid tripId, string label)
@@ -16,7 +15,7 @@ namespace MyHolidays.Core.Models
             Apply(new NewTripCreated(tripId, label));
         }
 
-        private Trip(List<IDomainEvent> tripEvents)
+        private Trip(IEnumerable<IDomainEvent> tripEvents)
         {
             foreach (var ev in tripEvents)
             {
@@ -44,7 +43,7 @@ namespace MyHolidays.Core.Models
             }
         }
 
-        public static Trip CreateFrom(List<IDomainEvent> tripEvents)
+        public static Trip CreateFrom(IEnumerable<IDomainEvent> tripEvents)
         {
             return new Trip(tripEvents);
         }

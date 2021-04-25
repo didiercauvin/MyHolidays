@@ -7,8 +7,6 @@ namespace MyHolidays.Core.Models
     {
         private string Label { get; set; }
 
-        public override Guid Id { get; set; }
-
         public Item(Guid id, string label)
         {
             Id = id;
@@ -17,7 +15,7 @@ namespace MyHolidays.Core.Models
             Apply(new NewItemCreated(id, label));
         }
 
-        public Item(List<IDomainEvent> events)
+        public Item(IEnumerable<IDomainEvent> events)
         {
             foreach (var ev in events)
             {
@@ -36,7 +34,7 @@ namespace MyHolidays.Core.Models
             }
         }
 
-        public static Item CreateFrom(List<IDomainEvent> events)
+        public static Item CreateFrom(IEnumerable<IDomainEvent> events)
         {
             return new Item(events);
         }

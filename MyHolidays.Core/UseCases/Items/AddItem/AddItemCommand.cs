@@ -10,9 +10,9 @@ namespace MyHolidays.Core.UseCases.Items.AddItem
 
         public class Handler : ICommandHandler<AddItemCommand>
         {
-            private readonly IRepository<Item> _itemRepository;
+            private readonly IRepository _itemRepository;
 
-            public Handler(IRepository<Item> itemRepository)
+            public Handler(IRepository itemRepository)
             {
                 _itemRepository = itemRepository;
             }

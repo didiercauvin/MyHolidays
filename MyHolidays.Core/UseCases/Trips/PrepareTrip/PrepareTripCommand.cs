@@ -10,9 +10,9 @@ namespace MyHolidays.Core.UseCases.Trips.PrepareTrip
 
         public class Handler : ICommandHandler<PrepareTripCommand>
         {
-            private IRepository<Trip> tripRepository;
+            private IRepository tripRepository;
 
-            public Handler(IRepository<Trip> tripRepository)
+            public Handler(IRepository tripRepository)
             {
                 this.tripRepository = tripRepository;
             }
