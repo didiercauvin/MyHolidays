@@ -18,6 +18,13 @@ namespace MyHolidays.Core.Models.Items
             ApplyChange(new NewItemCreated(id, label, recurring));
         }
 
+        private Item(ItemDto itemDto)
+        {
+            this.Id = itemDto.Id;
+            this.Label = itemDto.Label;
+            this.Recurring = itemDto.Recurring;
+        }
+
         public static Item CreateItem(Guid id, string label, bool recurring)
         {
             return new Item(id, label, recurring);
@@ -26,6 +33,11 @@ namespace MyHolidays.Core.Models.Items
         public void Rename(string newLabel)
         {
             ApplyChange(new ItemRenamed(Id, newLabel));
+        }
+
+        public static Item FromEvent(ItemDto itemDto)
+        {
+            return new Item(itemDto);
         }
 
         public void MarkAsRecurring()
