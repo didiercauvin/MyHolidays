@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MyHolidays.Core.Models
+namespace MyHolidays.Core.Models.Items
 {
     public class NewItemCreated : IDomainEvent
     {
