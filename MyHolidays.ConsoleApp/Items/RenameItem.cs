@@ -8,26 +8,24 @@ using System.Threading.Tasks;
 
 namespace MyHolidays.ConsoleApp.Items
 {
-    public class CreateItemCommand : ICommand
+    public class RenameItemCommand : ICommand
     {
-        public Guid ItemId { get; set; }
-        public string Label { get; set; }
-        public bool Recurring { get; set; }
+        public Guid Id { get; set; }
+        public string NewLabel { get; set; }
 
-        public class Handler : ICommandHandler<CreateItemCommand>
+        public class Handler : ICommandHandler<RenameItemCommand>
         {
             private readonly IRepository<Item> _repository;
-            
+
             public Handler(IRepository<Item> repository)
             {
                 _repository = repository;
             }
 
-            public void Handle(CreateItemCommand command)
+            public void Handle(RenameItemCommand command)
             {
-                var item = Item.CreateItem(command.ItemId, command.Label, command.Recurring);
-
-                _repository.Add(item);
+                var item = _repository.GetById(command.Id);
+                item.Rename(command.NewLabel);
             }
         }
     }

@@ -8,10 +8,16 @@ namespace MyHolidays.Core.Models
         public Guid Id { get; protected set; }
 
         protected List<IDomainEvent> Events { get; set; } = new List<IDomainEvent>();
+        private Dictionary<Type, Action<IDomainEvent>> _appliers = new Dictionary<Type, Action<IDomainEvent>>();
+
+        public Aggregate()
+        {
+            RegisterAppliers();
+        }
 
         protected void ApplyChange(IDomainEvent e)
         {
-            When(e);
+            _appliers[e.GetType()](e);
             Events.Add(e);
         }
 
@@ -20,7 +26,12 @@ namespace MyHolidays.Core.Models
             return Events;
         }
 
-        protected abstract void When(IDomainEvent e);
+        protected void RegisterApplier<TEvent>(Action<TEvent> apply) where TEvent: IDomainEvent
+        {
+            _appliers.Add(typeof(TEvent), x => apply((TEvent)x));
+        }
+
+        protected abstract void RegisterAppliers();
 
         public void Commit()
         {
