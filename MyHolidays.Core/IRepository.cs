@@ -3,9 +3,10 @@ using System;
 
 namespace MyHolidays.Core
 {
-    public interface IRepository
+    public interface IRepository<T>
+        where T: Aggregate
     {
-        T GetBy<T>(Guid id) where T : Aggregate, new();
-        void Save(Aggregate aggregate);
+        T GetById(Guid id);
+        void Save(T aggregate);
     }
 }

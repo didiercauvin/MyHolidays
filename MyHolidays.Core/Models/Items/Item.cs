@@ -7,14 +7,14 @@ namespace MyHolidays.Core.Models.Items
         private string _label;
         private bool _recurring;
 
-        private Item(Guid id, string label)
+        private Item(Guid id, string label, bool recurring)
         {
-            ApplyChange(new NewItemCreated(id, label));
+            ApplyChange(new NewItemCreated(id, label, recurring));
         }
 
-        public static Item CreateItem(Guid id, string label)
+        public static Item CreateItem(Guid id, string label, bool recurring)
         {
-            return new Item(id, label);
+            return new Item(id, label, recurring);
         }
 
         public void Rename(string newLabel)
@@ -47,6 +47,7 @@ namespace MyHolidays.Core.Models.Items
         {
             Id = @event.Id;
             _label = @event.Label;
+            _recurring = @event.Recurring;
         }
 
         private void Apply(ItemRenamed @event)

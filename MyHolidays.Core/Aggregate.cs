@@ -5,7 +5,7 @@ namespace MyHolidays.Core.Models
 {
     public abstract class Aggregate
     {
-        protected Guid Id { get; set; }
+        public Guid Id { get; protected set; }
 
         protected List<IDomainEvent> Events { get; set; } = new List<IDomainEvent>();
 
