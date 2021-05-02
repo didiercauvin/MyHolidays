@@ -18,10 +18,13 @@ namespace MyHolidays.ConsoleApp
 
                    services
                    .AddTransient<MyApplication>()
-                   .AddScoped<IRepository<Item>, Repository<Item>>()
+                   .AddTransient<AggregateFactory>()
+                   //.AddScoped<IRepository<Item>, EFRepository<Item>>()
+                   .AddScoped<IRepository<Item>, EventSourcingRepository<Item>>()
+                   .AddScoped<IEventStore, InMemoryEventStore>()
                    .AddScoped<ICommandHandler<RenameItemCommand>, RenameItemCommand.Handler>()
                    .AddScoped<ICommandHandler<CreateItemCommand>, CreateItemCommand.Handler>()
-                   .AddScoped<IQueryHandler<GetAllItemsQuery, GetAllItemsQueryResult>, GetAllItemsQuery.Handler>()
+                   .AddScoped<IQueryHandler<GetAllItemsQuery, GetAllItemsQueryResult>, GetAllItemsQuery.EFHandler>()
                    .AddDbContext<MyHolidaysContext>();
                }).UseConsoleLifetime();
 

@@ -7,12 +7,12 @@ using System.Linq;
 
 namespace MyHolidays.ConsoleApp.Items
 {
-    public class Repository<T> : IRepository<T>
+    public class EFRepository<T> : IRepository<T>
         where T : Aggregate
     {
         private MyHolidaysContext context;
 
-        public Repository(MyHolidaysContext context)
+        public EFRepository(MyHolidaysContext context)
         {
             this.context = context;
         }

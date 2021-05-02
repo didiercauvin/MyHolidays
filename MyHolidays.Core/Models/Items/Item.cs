@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MyHolidays.Core.Models.Items
 {
@@ -23,11 +24,12 @@ namespace MyHolidays.Core.Models.Items
             ApplyChange(new NewItemCreated(id, label, recurring));
         }
 
-        private Item(ItemDto itemDto)
+        private Item(List<IDomainEvent> events)
         {
-            this.Id = itemDto.Id;
-            this._label = itemDto.Label;
-            this._recurring = itemDto.Recurring;
+            foreach (var ev in events)
+            {
+                ApplyChange(ev);
+            }
         }
 
         public static Item CreateItem(Guid id, string label, bool recurring)
@@ -35,14 +37,14 @@ namespace MyHolidays.Core.Models.Items
             return new Item(id, label, recurring);
         }
 
+        public static Item CreateFrom(List<IDomainEvent> events)
+        {
+            return new Item(events);
+        }
+
         public void Rename(string newLabel)
         {
             ApplyChange(new ItemRenamed(Id, newLabel));
-        }
-
-        public static Item FromEvent(ItemDto itemDto)
-        {
-            return new Item(itemDto);
         }
 
         public void MarkAsRecurring()

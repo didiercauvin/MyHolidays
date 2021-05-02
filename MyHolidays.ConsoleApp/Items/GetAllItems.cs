@@ -1,17 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MyHolidays.ConsoleApp.Items
 {
     public class GetAllItemsQuery : IQuery<GetAllItemsQueryResult>
     {
-        public class Handler : IQueryHandler<GetAllItemsQuery, GetAllItemsQueryResult>
+        public class EFHandler : IQueryHandler<GetAllItemsQuery, GetAllItemsQueryResult>
         {
             private MyHolidaysContext context;
 
-            public Handler(MyHolidaysContext context)
+            public EFHandler(MyHolidaysContext context)
             {
                 this.context = context;
             }
@@ -33,6 +32,22 @@ namespace MyHolidays.ConsoleApp.Items
                 }
 
                 return new GetAllItemsQueryResult(items);
+            }
+
+            public class EventSourcingHandler : IQueryHandler<GetAllItemsQuery, GetAllItemsQueryResult>
+            {
+                private readonly IEventStore _store;
+
+                public EventSourcingHandler(IEventStore store)
+                {
+                    _store = store;
+                }
+
+                public GetAllItemsQueryResult Execute(GetAllItemsQuery query)
+                {
+                    
+                    return new GetAllItemsQueryResult(new List<ResultItem>());
+                }
             }
         }
     }
