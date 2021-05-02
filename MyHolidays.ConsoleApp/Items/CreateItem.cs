@@ -27,7 +27,7 @@ namespace MyHolidays.ConsoleApp.Items
             {
                 var item = Item.CreateItem(command.ItemId, command.Label, command.Recurring);
 
-                _repository.Add(item);
+                _repository.Save(item);
             }
         }
     }

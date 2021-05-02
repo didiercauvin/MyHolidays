@@ -1,18 +1,72 @@
-﻿using MyHolidays.ConsoleApp.Items;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using MyHolidays.ConsoleApp.Items;
+using MyHolidays.Core;
+using MyHolidays.Core.Models.Items;
 using System;
+using System.Threading.Tasks;
 
 namespace MyHolidays.ConsoleApp
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            var database = new InMemoryDatabase();
-            var itemRepository = new ItemRepository(database);
-            var createItemCommandHandler = new CreateItemCommand.Handler(itemRepository);
-            var renameItemCommandHandler = new RenameItemCommand.Handler(itemRepository);
-            var queryAllItemsHandler = new GetAllItemsQuery.Handler(database);
+            var builder = new HostBuilder()
+               .ConfigureServices((hostContext, services) =>
+               {
 
+                   services
+                   .AddTransient<MyApplication>()
+                   .AddScoped<IRepository<Item>, Repository<Item>>()
+                   .AddScoped<ICommandHandler<RenameItemCommand>, RenameItemCommand.Handler>()
+                   .AddScoped<ICommandHandler<CreateItemCommand>, CreateItemCommand.Handler>()
+                   .AddScoped<IQueryHandler<GetAllItemsQuery, GetAllItemsQueryResult>, GetAllItemsQuery.Handler>()
+                   .AddDbContext<MyHolidaysContext>();
+               }).UseConsoleLifetime();
+
+            var host = builder.Build();
+
+            using (var serviceScope = host.Services.CreateScope())
+            {
+                var services = serviceScope.ServiceProvider;
+
+                try
+                {
+                    var myService = services.GetRequiredService<MyApplication>();
+                    await myService.Run();
+
+                    Console.WriteLine("Success");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error Occured");
+                }
+            }
+
+            Console.ReadLine();
+
+        }
+    }
+
+    public class MyApplication
+    {
+        private readonly ICommandHandler<CreateItemCommand> createItemCommandHandler;
+        private readonly ICommandHandler<RenameItemCommand> renameItemCommandHandler;
+        private readonly IQueryHandler<GetAllItemsQuery, GetAllItemsQueryResult> queryAllItemsHandler;
+
+        public MyApplication(
+            ICommandHandler<CreateItemCommand> createItemCommandHandler,
+            ICommandHandler<RenameItemCommand> renameItemCommandHandler,
+            IQueryHandler<GetAllItemsQuery, GetAllItemsQueryResult> queryAllItemsHandler)
+        {
+            this.createItemCommandHandler = createItemCommandHandler;
+            this.renameItemCommandHandler = renameItemCommandHandler;
+            this.queryAllItemsHandler = queryAllItemsHandler;
+        }
+
+        internal async Task Run()
+        {
             do
             {
                 Console.WriteLine("Saisir un item:");
@@ -34,12 +88,9 @@ namespace MyHolidays.ConsoleApp
                 Liste(queryAllItemsHandler);
 
             } while (Console.ReadLine() != "exit");
-
-            Console.ReadLine();
-            
         }
 
-        private static void Liste(GetAllItemsQuery.Handler queryAllItemsHandler)
+        private static void Liste(IQueryHandler<GetAllItemsQuery, GetAllItemsQueryResult> queryAllItemsHandler)
         {
             Console.WriteLine("Voici tous les items saisis:");
             var result = queryAllItemsHandler.Execute(new GetAllItemsQuery());

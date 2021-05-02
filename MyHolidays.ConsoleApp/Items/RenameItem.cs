@@ -26,6 +26,8 @@ namespace MyHolidays.ConsoleApp.Items
             {
                 var item = _repository.GetById(command.Id);
                 item.Rename(command.NewLabel);
+
+                _repository.Save(item);
             }
         }
     }

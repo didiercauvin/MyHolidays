@@ -4,13 +4,18 @@ namespace MyHolidays.Core.Models.Items
 {
     public class Item : Aggregate
     {
-        public string Label { get; private set; }
-        public bool Recurring { get; private set; }
+        private string _label;
+        private bool _recurring;
 
         protected override void RegisterAppliers()
         {
             RegisterApplier<NewItemCreated>(this.Apply);
             RegisterApplier<ItemRenamed>(this.Apply);
+        }
+
+        private Item()
+        {
+
         }
 
         private Item(Guid id, string label, bool recurring)
@@ -21,8 +26,8 @@ namespace MyHolidays.Core.Models.Items
         private Item(ItemDto itemDto)
         {
             this.Id = itemDto.Id;
-            this.Label = itemDto.Label;
-            this.Recurring = itemDto.Recurring;
+            this._label = itemDto.Label;
+            this._recurring = itemDto.Recurring;
         }
 
         public static Item CreateItem(Guid id, string label, bool recurring)
@@ -48,18 +53,18 @@ namespace MyHolidays.Core.Models.Items
         private void Apply(NewItemCreated @event)
         {
             Id = @event.Id;
-            Label = @event.Label;
-            Recurring = @event.Recurring;
+            _label = @event.Label;
+            _recurring = @event.Recurring;
         }
 
         private void Apply(ItemRenamed @event)
         {
-            Label = @event.NewLabel;
+            _label = @event.NewLabel;
         }
 
         private void Apply(ItemMarkedAsRecurring @event)
         {
-            Recurring = true;
+            _recurring = true;
         }
     }
 }

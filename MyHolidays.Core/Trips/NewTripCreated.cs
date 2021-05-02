@@ -7,13 +7,15 @@ namespace MyHolidays.Core.Trips
 {
     public class NewTripCreated : IDomainEvent
     {
-        public NewTripCreated(Guid id, IEnumerable<ItemDto> items)
+        public NewTripCreated(Guid id, DateTime aller, DateTime retour)
         {
             Id = id;
-            Items = items.ToList();
+            Aller = aller;
+            Retour = retour;
         }
 
         public Guid Id { get; }
-        public List<ItemDto> Items { get; }
+        public DateTime Aller { get; }
+        public DateTime Retour { get; }
     }
 }

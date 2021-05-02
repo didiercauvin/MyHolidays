@@ -7,23 +7,54 @@ using System.Linq;
 
 namespace MyHolidays.ConsoleApp.Items
 {
-    public class ItemRepository : IRepository<Item>
+    public class Repository<T> : IRepository<T>
+        where T : Aggregate
     {
-        private readonly InMemoryDatabase _database;
+        private MyHolidaysContext context;
 
-        public ItemRepository(InMemoryDatabase database)
+        public Repository(MyHolidaysContext context)
         {
-            _database = database;
+            this.context = context;
         }
 
-        public Item GetById(Guid id)
+        public T GetById(Guid id)
         {
-            return _database.Items.First(x => x.Id == id);
+            return context.Set<T>().First(x => x.Id == id);
         }
 
-        public void Add(Item aggregate)
+        public void Save(T aggregate)
         {
-            _database.Items.Add(aggregate);
+            if (!context.Set<T>().Any(x => x.Id == aggregate.Id))
+            {
+                context.Set<T>().Add(aggregate);
+            }
+
+            context.SaveChanges();
         }
     }
+
+    //public class ItemRepository : IRepository<Item>
+    //{
+    //    private MyHolidaysContext context;
+
+    //    public ItemRepository(MyHolidaysContext context)
+    //    {
+    //        this.context = context;
+    //    }
+
+    //    public Item GetById(Guid id)
+    //    {
+            
+    //    }
+
+    //    public void Save(Item item)
+    //    {
+    //        if (!context.Items.Any(x => x.Id == item.Id))
+    //        {
+    //            context.Items.Add(item);
+    //        }
+
+    //        context.SaveChanges();
+    //    }
+    //}
 }

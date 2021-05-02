@@ -7,6 +7,6 @@ namespace MyHolidays.Core
         where T: Aggregate
     {
         T GetById(Guid id);
-        void Add(T aggregate);
+        void Save(T aggregate);
     }
 }

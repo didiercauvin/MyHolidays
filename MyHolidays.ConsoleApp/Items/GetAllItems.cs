@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,18 +9,28 @@ namespace MyHolidays.ConsoleApp.Items
     {
         public class Handler : IQueryHandler<GetAllItemsQuery, GetAllItemsQueryResult>
         {
-            private readonly InMemoryDatabase _database;
+            private MyHolidaysContext context;
 
-            public Handler(InMemoryDatabase database)
+            public Handler(MyHolidaysContext context)
             {
-                _database = database;
+                this.context = context;
             }
 
             public GetAllItemsQueryResult Execute(GetAllItemsQuery query)
             {
-                var items = _database.Items
-                    .Select(x => new ResultItem(x.Id, x.Label, x.Recurring))
-                    .ToList();
+                var items = new List<ResultItem>();
+                var sql = "select * from Items";
+                var connection = context.Database.GetDbConnection();
+                var sqlCommand = connection.CreateCommand();
+                sqlCommand.CommandText = sql;
+
+                using (var reader = sqlCommand.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        items.Add(new ResultItem { Id = Guid.Parse((string)reader[0]), Label = (string)reader[1], Recurring = (long)reader[2] == 1 ? true : false });
+                    }
+                }
 
                 return new GetAllItemsQueryResult(items);
             }
@@ -28,16 +39,10 @@ namespace MyHolidays.ConsoleApp.Items
 
     public class ResultItem
     {
-        public ResultItem(Guid id, string label, bool recurring)
-        {
-            Id = id;
-            Label = label;
-            Recurring = recurring;
-        }
 
-        public Guid Id { get; }
-        public string Label { get; }
-        public bool Recurring { get; }
+        public Guid Id { get; set; }
+        public string Label { get; set; }
+        public bool Recurring { get; set; }
     }
 
     public class GetAllItemsQueryResult
