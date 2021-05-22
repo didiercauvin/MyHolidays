@@ -48,7 +48,7 @@ namespace MyHolidays.ConsoleApp
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error Occured");
+                    Console.WriteLine(ex.Message);
                 }
             }
 

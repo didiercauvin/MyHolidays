@@ -7,12 +7,17 @@ namespace DocumentContext
     public class Document : AggregateRoot
     {
         private readonly string _label;
-        private readonly string _fileLink;
+        private readonly FileId _fileId;
+
+        private Document()
+        {
+
+        }
 
         public Document(string label, string fileLink)
         {
             _label = label;
-            _fileLink = fileLink;
+            _fileId = new FileId(fileLink);
         }
 
         protected override void RegisterAppliers()

@@ -18,7 +18,7 @@ namespace DocumentContext
             builder.Entity<Document>().ToTable("Documents");
             builder.Entity<Document>().HasKey(x => x.Id);
             builder.Entity<Document>().Property<string>("_label").HasColumnName("Label");
-            builder.Entity<Document>().Property<string>("_fileLink").HasColumnName("FileLink");
+            builder.Entity<Document>().OwnsOne<FileId>("_fileId", x => { x.Property(p => p.FileLink).HasColumnName("FileLink"); });
 
             builder.Entity<File>().ToTable("Files");
             builder.Entity<File>().HasKey(x => x.Id);
