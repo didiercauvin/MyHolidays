@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BuildingBlocks;
+using System;
 using System.Collections.Generic;
 
 namespace MyHolidays.Core.Models.Items

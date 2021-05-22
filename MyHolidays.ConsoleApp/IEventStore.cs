@@ -1,4 +1,4 @@
-﻿using MyHolidays.Core.Models;
+﻿using BuildingBlocks;
 using System;
 using System.Collections.Generic;
 using System.Linq;

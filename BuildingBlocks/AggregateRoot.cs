@@ -1,17 +1,21 @@
-﻿using BuildingBlocks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace MyHolidays.Core.Models
+namespace BuildingBlocks
 {
-    public abstract class Aggregate
+    public interface IEntity
+    {
+        public Guid Id { get; }
+    }
+
+    public abstract class AggregateRoot : IEntity
     {
         public Guid Id { get; protected set; }
 
         protected List<IDomainEvent> Events { get; set; } = new List<IDomainEvent>();
         private Dictionary<Type, Action<IDomainEvent>> _appliers = new Dictionary<Type, Action<IDomainEvent>>();
 
-        public Aggregate()
+        public AggregateRoot()
         {
             RegisterAppliers();
         }
@@ -27,7 +31,7 @@ namespace MyHolidays.Core.Models
             return Events;
         }
 
-        protected void RegisterApplier<TEvent>(Action<TEvent> apply) where TEvent: IDomainEvent
+        protected void RegisterApplier<TEvent>(Action<TEvent> apply) where TEvent : IDomainEvent
         {
             _appliers.Add(typeof(TEvent), x => apply((TEvent)x));
         }

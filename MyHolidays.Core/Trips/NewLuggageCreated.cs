@@ -1,4 +1,5 @@
-﻿using MyHolidays.Core.Models;
+﻿using BuildingBlocks;
+using MyHolidays.Core.Models;
 using System;
 
 namespace MyHolidays.Core.Trips

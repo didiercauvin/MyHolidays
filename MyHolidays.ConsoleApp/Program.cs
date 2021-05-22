@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using BuildingBlocks;
+using DocumentContext;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyHolidays.ConsoleApp.Items;
 using MyHolidays.Core;
@@ -24,8 +26,11 @@ namespace MyHolidays.ConsoleApp
                    .AddScoped<IEventStore, InMemoryEventStore>()
                    .AddScoped<ICommandHandler<RenameItemCommand>, RenameItemCommand.Handler>()
                    .AddScoped<ICommandHandler<CreateItemCommand>, CreateItemCommand.Handler>()
+                   .AddScoped<ICommandHandler<CreateDocumentCommand>, CreateDocumentCommand.Handler>()
                    .AddScoped<IQueryHandler<GetAllItemsQuery, GetAllItemsQueryResult>, GetAllItemsQuery.EFHandler>()
-                   .AddDbContext<MyHolidaysContext>();
+                   .AddScoped<IHandleFile, LocalFileSystemFileHandler>()
+                   .AddDbContext<MyHolidaysContext>()
+                   .AddDbContext<DocumentDbContext>();
                }).UseConsoleLifetime();
 
             var host = builder.Build();
@@ -57,40 +62,47 @@ namespace MyHolidays.ConsoleApp
         private readonly ICommandHandler<CreateItemCommand> createItemCommandHandler;
         private readonly ICommandHandler<RenameItemCommand> renameItemCommandHandler;
         private readonly IQueryHandler<GetAllItemsQuery, GetAllItemsQueryResult> queryAllItemsHandler;
+        private readonly ICommandHandler<CreateDocumentCommand> _createDocumentHandler;
 
         public MyApplication(
             ICommandHandler<CreateItemCommand> createItemCommandHandler,
             ICommandHandler<RenameItemCommand> renameItemCommandHandler,
+            ICommandHandler<CreateDocumentCommand> createDocumentHandler,
             IQueryHandler<GetAllItemsQuery, GetAllItemsQueryResult> queryAllItemsHandler)
         {
             this.createItemCommandHandler = createItemCommandHandler;
             this.renameItemCommandHandler = renameItemCommandHandler;
             this.queryAllItemsHandler = queryAllItemsHandler;
+            _createDocumentHandler = createDocumentHandler;
         }
 
         internal async Task Run()
         {
-            do
-            {
-                Console.WriteLine("Saisir un item:");
-                Console.Write("Label: ");
-                var label = Console.ReadLine();
-                Console.Write("Recurrent: ");
-                var recurring = bool.Parse(Console.ReadLine());
+            //do
+            //{
+                var file = System.IO.File.ReadAllBytes(@"F:\Autre\Sources\MyHolidays\MyHolidays\MyHolidays.ConsoleApp\file.txt");
+                var input = new CreateDocumentCommand { Label = "Mon document", FileContent = file };
+                _createDocumentHandler.Handle(input);
 
-                createItemCommandHandler.Handle(new CreateItemCommand { ItemId = Guid.NewGuid(), Label = label, Recurring = recurring });
-                Liste(queryAllItemsHandler);
+                //Console.WriteLine("Saisir un item:");
+                //Console.Write("Label: ");
+                //var label = Console.ReadLine();
+                //Console.Write("Recurrent: ");
+                //var recurring = bool.Parse(Console.ReadLine());
 
-                Console.WriteLine("Renommer un item");
-                Console.Write("Id: ");
-                var id = Console.ReadLine();
-                Console.Write("Label: ");
-                var newLabel = Console.ReadLine();
-                renameItemCommandHandler.Handle(new RenameItemCommand { Id = Guid.Parse(id), NewLabel = newLabel });
+                //createItemCommandHandler.Handle(new CreateItemCommand { ItemId = Guid.NewGuid(), Label = label, Recurring = recurring });
+                //Liste(queryAllItemsHandler);
 
-                Liste(queryAllItemsHandler);
+                //Console.WriteLine("Renommer un item");
+                //Console.Write("Id: ");
+                //var id = Console.ReadLine();
+                //Console.Write("Label: ");
+                //var newLabel = Console.ReadLine();
+                //renameItemCommandHandler.Handle(new RenameItemCommand { Id = Guid.Parse(id), NewLabel = newLabel });
 
-            } while (Console.ReadLine() != "exit");
+                //Liste(queryAllItemsHandler);
+
+            //} while (Console.ReadLine() != "exit");
         }
 
         private static void Liste(IQueryHandler<GetAllItemsQuery, GetAllItemsQueryResult> queryAllItemsHandler)

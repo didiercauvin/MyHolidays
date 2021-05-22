@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BuildingBlocks;
+using System;
 
 namespace MyHolidays.Core.Models.Items
 {

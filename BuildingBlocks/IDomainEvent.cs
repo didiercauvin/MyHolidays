@@ -1,4 +1,4 @@
-﻿namespace MyHolidays.Core.Models
+﻿namespace BuildingBlocks
 {
     public interface IDomainEvent
     {

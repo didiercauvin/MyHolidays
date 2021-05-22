@@ -1,4 +1,4 @@
-﻿namespace MyHolidays.ConsoleApp
+﻿namespace BuildingBlocks
 {
     public interface ICommand
     {

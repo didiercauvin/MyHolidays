@@ -1,8 +1,8 @@
-﻿namespace MyHolidays.ConsoleApp
+﻿namespace BuildingBlocks
 {
     public interface IQuery<TResult>
     {
-        
+
     }
 
     public interface IQueryHandler<TQuery, TResult>

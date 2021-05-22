@@ -6,14 +6,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="5.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="5.0.6" />
 	<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.0.4" />
 	<PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BuildingBlocks\BuildingBlocks.csproj" />
+    <ProjectReference Include="..\DocumentContext\DocumentContext.csproj" />
     <ProjectReference Include="..\MyHolidays.Core\MyHolidays.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="file.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
